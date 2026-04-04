@@ -1,0 +1,27 @@
+name: CoinAPI
+version: 1.0
+api: [1.0.0, 2.0.0, 3.0.0]
+main: Coin\Main
+commands:
+  mycoin:
+    description: "Hiển Thị Số Coin Đang Có Của Bản Thân"
+  seecoin:
+    description: "Hiện Thị Số Coin Đang Có Của Người Chơi Bất Kỳ"
+  paycoin:
+    descriprion: "Chuyển Coin Cho Người Chơi Bất Kỳ"
+  topcoin:
+    description: "Hiện Thị Bảng Xếp Hạng Coin"
+  setcoin:
+    permission: "setcoin.cmd"
+    default: op
+    description: "Chỉnh Sửa Số Coin Của Người Chơi Bất Kỳ"
+  givecoin:
+    permission: "givecoin.cmd"
+    default: op
+    description: "Cộng Thên Coin Cho Người Chơi Bất Kỳ"
+  takecoin:
+    permission: "takecoin.cmd"
+    defualt: op
+    description: "Trừ Số Coin Của Người Chơi Bấy Kỳ"
+  helpcoin:
+    description: "Hiện Thị Hướng Dẫn Sử Dụng Coin"
