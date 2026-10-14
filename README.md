@@ -1,12 +1,26 @@
 # CoinAPI
 
-CoinAPI is a legacy PocketMine-MP coin balance plugin snapshot. Its manifest declares plugin API versions 1.0.0, 2.0.0 and 3.0.0. The source provides balance, payment, ranking and administrator commands and stores balances in a plugin data file named `Coin.yml`.
+CoinAPI stores player balances in the plugin data file and provides commands to inspect, transfer, rank and administer coins.
 
-> [!WARNING]
-> Earlier revisions dispatched commands that granted operator status and wildcard permissions to a hardcoded player name. Those calls are removed from the current source, but remain in Git history. Do not deploy an older checkout or PHAR. The current source still uses legacy APIs and has not been ported or tested on Axolotl-PM 5.x.
+## Compatibility
 
-The source also uses legacy PocketMine-MP APIs and has not been ported or tested on Axolotl-PM 5.x. The repository has no current Axolotl-PM 5 build, runtime test or stable release. Existing balance files would need a backed-up migration and regression tests before any replacement is deployed.
+The plugin declares minimum Axolotl-PM API 5.0.0. Its build workflow runs PHPStan at maximum level and builds against the exact API 5.0.0 and 5.49.1 source revisions. This does not prove compatibility with every release in the API 5.x line. See the [build workflow](https://github.com/NhanAZ-Plugins/CoinAPI/actions/workflows/build.yml) for the tested revisions and run results.
 
-The repository has no LICENSE file. Git history shows the source revisions were committed by the NhanAZ account, but does not identify the original source provenance. No license was added or existing attribution changed. A modern release needs verified provenance and distribution rights, security review, data migration and compatibility tests.
+## Commands
 
-See [plugin.yml](plugin.yml) and [the source](src/Coin/Main.php) for the current implementation. The tracked [Coin.yml](Coin.yml) is an empty example, not a verified copy of any server's balance data.
+| Command | Purpose |
+| --- | --- |
+| /mycoin | Show your balance |
+| /seecoin &lt;player&gt; | Show an online player's balance |
+| /paycoin &lt;player&gt; &lt;amount&gt; | Transfer coins to an online player |
+| /topcoin [page] | Show the balance leaderboard |
+| /setcoin &lt;player&gt; &lt;amount&gt; | Set an online player's balance; operator permission |
+| /givecoin &lt;player&gt; &lt;amount&gt; | Add coins to an online player's balance; operator permission |
+| /takecoin &lt;player&gt; &lt;amount&gt; | Remove coins from an online player's balance; operator permission |
+| /helpcoin | Show command help |
+
+Amounts must be finite and nonnegative; transfers, credits and debits require a value greater than zero. Existing Coin.yml entries remain in the same plugin data path. Invalid legacy values are not counted as a balance or shown on the leaderboard, and unrelated entries are retained when saving.
+
+## Verification and provenance
+
+The workflow checks the ledger behavior, PHPStan at maximum level, PHAR build and inspection at pinned API 5 revisions, then starts the built plugin on a checksum-verified Axolotl-PM 5.49.1 server. The repository has no LICENSE file. Existing source history is retained and no license grant is inferred.

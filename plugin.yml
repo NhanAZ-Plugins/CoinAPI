@@ -1,27 +1,54 @@
 name: CoinAPI
-version: 1.0
-api: [1.0.0, 2.0.0, 3.0.0]
 main: Coin\Main
+version: 2.0.0
+api: 5.0.0
 commands:
   mycoin:
-    description: "Hiển Thị Số Coin Đang Có Của Bản Thân"
+    description: Hiển thị số coin của bạn
+    permission: coinapi.command.mycoin
   seecoin:
-    description: "Hiện Thị Số Coin Đang Có Của Người Chơi Bất Kỳ"
+    description: Hiển thị số coin của người chơi đang trực tuyến
+    permission: coinapi.command.seecoin
   paycoin:
-    descriprion: "Chuyển Coin Cho Người Chơi Bất Kỳ"
+    description: Chuyển coin cho người chơi đang trực tuyến
+    permission: coinapi.command.paycoin
   topcoin:
-    description: "Hiện Thị Bảng Xếp Hạng Coin"
+    description: Hiển thị bảng xếp hạng coin
+    permission: coinapi.command.topcoin
   setcoin:
-    permission: "setcoin.cmd"
-    default: op
-    description: "Chỉnh Sửa Số Coin Của Người Chơi Bất Kỳ"
+    permission: setcoin.cmd
+    description: Đặt số coin của người chơi
   givecoin:
-    permission: "givecoin.cmd"
-    default: op
-    description: "Cộng Thên Coin Cho Người Chơi Bất Kỳ"
+    permission: givecoin.cmd
+    description: Cộng coin cho người chơi
   takecoin:
-    permission: "takecoin.cmd"
-    defualt: op
-    description: "Trừ Số Coin Của Người Chơi Bấy Kỳ"
+    permission: takecoin.cmd
+    description: Trừ coin của người chơi
   helpcoin:
-    description: "Hiện Thị Hướng Dẫn Sử Dụng Coin"
+    description: Hiển thị hướng dẫn CoinAPI
+    permission: coinapi.command.helpcoin
+permissions:
+  coinapi.command.mycoin:
+    default: true
+    description: Allows viewing your coin balance
+  coinapi.command.seecoin:
+    default: true
+    description: Allows viewing an online player's coin balance
+  coinapi.command.paycoin:
+    default: true
+    description: Allows transferring coins to an online player
+  coinapi.command.topcoin:
+    default: true
+    description: Allows viewing the coin leaderboard
+  setcoin.cmd:
+    default: op
+    description: Allows setting a player's coin balance
+  givecoin.cmd:
+    default: op
+    description: Allows adding coins to a player's balance
+  takecoin.cmd:
+    default: op
+    description: Allows removing coins from a player's balance
+  coinapi.command.helpcoin:
+    default: true
+    description: Allows viewing CoinAPI command help
