@@ -29,3 +29,8 @@ Amounts must be finite and nonnegative; transfers, credits and debits require a 
 ## Verification and provenance
 
 The workflow checks the ledger behavior, PHPStan at maximum level, PHAR build and inspection at pinned API 5 revisions, then starts the built plugin on a checksum-verified Axolotl-PM 5.49.1 server. The repository has no LICENSE file. Existing source history is retained and no license grant is inferred.
+
+
+## Credits
+
+Authors: NhanAZ.
