@@ -2,6 +2,7 @@ name: CoinAPI
 main: Coin\Main
 version: 2.0.0
 api: 5.0.0
+authors: ["NhanAZ"]
 commands:
   mycoin:
     description: Hiển thị số coin của bạn
