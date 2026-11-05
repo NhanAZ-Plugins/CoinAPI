@@ -5,28 +5,28 @@ api: 5.0.0
 authors: ["NhanAZ"]
 commands:
   mycoin:
-    description: Hiển thị số coin của bạn
+    description: View your coin balance
     permission: coinapi.command.mycoin
   seecoin:
-    description: Hiển thị số coin của người chơi đang trực tuyến
+    description: View an online player's coin balance
     permission: coinapi.command.seecoin
   paycoin:
-    description: Chuyển coin cho người chơi đang trực tuyến
+    description: Transfer coins to an online player
     permission: coinapi.command.paycoin
   topcoin:
-    description: Hiển thị bảng xếp hạng coin
+    description: View the coin leaderboard
     permission: coinapi.command.topcoin
   setcoin:
     permission: setcoin.cmd
-    description: Đặt số coin của người chơi
+    description: Set a player's coin balance
   givecoin:
     permission: givecoin.cmd
-    description: Cộng coin cho người chơi
+    description: Add coins to a player's balance
   takecoin:
     permission: takecoin.cmd
-    description: Trừ coin của người chơi
+    description: Remove coins from a player's balance
   helpcoin:
-    description: Hiển thị hướng dẫn CoinAPI
+    description: View CoinAPI command help
     permission: coinapi.command.helpcoin
 permissions:
   coinapi.command.mycoin:

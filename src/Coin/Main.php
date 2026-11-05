@@ -14,6 +14,7 @@ use pocketmine\utils\Config;
 use RuntimeException;
 
 final class Main extends PluginBase implements Listener{
+	private const PREFIX = "[CoinAPI] ";
 
 	private Config $coin;
 	private CoinLedger $ledger;
@@ -49,71 +50,71 @@ final class Main extends PluginBase implements Listener{
 		switch(strtolower($command->getName())){
 			case "mycoin":
 				if(!($sender instanceof Player)){
-					$sender->sendMessage("§e⊹⊱§cLệnh này chỉ dùng trong trò chơi.§e⊰⊹");
+					$sender->sendMessage(self::PREFIX . "This command can only be used in-game.");
 					return true;
 				}
-				$sender->sendMessage("§e⊹⊱§aSố Coin Của Bạn Là §b" . $this->ledger->getBalance($sender->getName()) . "§a Coin§e⊰⊹");
+				$sender->sendMessage(self::PREFIX . "Your coin balance: " . $this->ledger->getBalance($sender->getName()));
 				return true;
 
 			case "seecoin":
 				if(!isset($args[0])){
-					$sender->sendMessage("§e⊹⊱§aSử Dụng §b/seecoin <Tên Người Chơi>§e⊰⊹");
+					$sender->sendMessage(self::PREFIX . "Usage: /seecoin <player>");
 					return true;
 				}
 				$player = $this->getServer()->getPlayerExact($args[0]);
 				if($player === null){
-					$sender->sendMessage("§e⊹⊱§cKhông Tìm Thấy Người Chơi§e⊰⊹");
+					$sender->sendMessage(self::PREFIX . "Player not found.");
 					return true;
 				}
-				$sender->sendMessage("§e⊹⊱§aSố Coin Của Người Chơi§b " . $player->getName() . " §aLà §b" . $this->ledger->getBalance($player->getName()) . "§a Coin§e⊰⊹");
+				$sender->sendMessage(self::PREFIX . $player->getName() . "'s coin balance: " . $this->ledger->getBalance($player->getName()));
 				return true;
 
 			case "paycoin":
 				if(!isset($args[0], $args[1])){
-					$sender->sendMessage("§e⊹⊱§aSử Dụng§b /paycoin <Tên Người Chơi> <Số Lượng>§e⊰⊹");
+					$sender->sendMessage(self::PREFIX . "Usage: /paycoin <player> <amount>");
 					return true;
 				}
 				if(!($sender instanceof Player)){
-					$sender->sendMessage("§e⊹⊱§cLệnh này chỉ dùng trong trò chơi.§e⊰⊹");
+					$sender->sendMessage(self::PREFIX . "This command can only be used in-game.");
 					return true;
 				}
 				$player = $this->getServer()->getPlayerExact($args[0]);
 				$amount = $this->parseAmount($args[1], false);
 				if($player === null){
-					$sender->sendMessage("§e⊹⊱§cKhông Tìm Thấy Người Chơi§e⊰⊹");
+					$sender->sendMessage(self::PREFIX . "Player not found.");
 					return true;
 				}
 				if($amount === null){
-					$sender->sendMessage("§e⊹⊱§cSố Lượng Coin Không Hợp Lệ§e⊰⊹");
+					$sender->sendMessage(self::PREFIX . "Invalid coin amount.");
 					return true;
 				}
 				if($sender->getName() === $player->getName()){
-					$sender->sendMessage("§e⊹⊱§cBạn Không Thể Chuyển Coin Cho Chính Mình.§e⊰⊹");
+					$sender->sendMessage(self::PREFIX . "You cannot transfer coins to yourself.");
 					return true;
 				}
 				if(!$this->ledger->transfer($sender->getName(), $player->getName(), $amount)){
-					$sender->sendMessage("§e⊹⊱§cBạn Không Đủ Coin Để Chuyển.§e⊰⊹");
+					$sender->sendMessage(self::PREFIX . "You do not have enough coins.");
 					return true;
 				}
 				$this->saveLedger();
-				$sender->sendMessage("§e⊹⊱§aĐã Chuyển §b" . $amount . "§a Coin Cho Người Chơi §b" . $player->getName() . "§e⊰⊹");
-				$player->sendMessage("§e⊹⊱§aBạn Đã Nhận Được §b" . $amount . "§a Coin Từ Người Chơi §b" . $sender->getName() . "§e⊰⊹");
+				$sender->sendMessage(self::PREFIX . "Transferred " . $amount . " coins to " . $player->getName() . ".");
+				$player->sendMessage(self::PREFIX . "You received " . $amount . " coins from " . $sender->getName() . ".");
 				return true;
 
 			case "topcoin":
 				$page = $this->parsePage($args[0] ?? "1");
 				if($page === null){
-					$sender->sendMessage("§e⊹⊱§aSử Dụng §b/topcoin <Trang>§e⊰⊹");
+					$sender->sendMessage(self::PREFIX . "Usage: /topcoin <page>");
 					return true;
 				}
 				$balances = $this->ledger->getRankedBalances();
 				$maxPages = max(1, (int) ceil(count($balances) / 5));
 				$page = min($page, $maxPages);
-				$sender->sendMessage("§e⊹⊱§aBảng Xếp Hạng Coin Của Máy Chủ §f<§aTrang §b" . $page . "§f/§b" . $maxPages . "§f>§e⊰⊹");
+				$sender->sendMessage(self::PREFIX . "Coin leaderboard (page " . $page . "/" . $maxPages . "):");
 				$offset = ($page - 1) * 5;
 				$rank = $offset + 1;
 				foreach(array_slice($balances, $offset, 5, true) as $name => $balance){
-					$sender->sendMessage("§e⊹⊱§cXếp Hạng §e" . $rank . " §f|§b " . $name . " §f|§a " . $balance . " Coin§e⊰⊹");
+					$sender->sendMessage(self::PREFIX . "#" . $rank . " " . $name . " - " . $balance . " coins");
 					++$rank;
 				}
 				return true;
@@ -124,14 +125,14 @@ final class Main extends PluginBase implements Listener{
 				return $this->handleAdminCommand($sender, strtolower($command->getName()), $args);
 
 			case "helpcoin":
-				$sender->sendMessage("§e⊹⊱§aHướng Dẫn Sử Dụng Coin§e⊰⊹");
-				$sender->sendMessage("§e⊹⊱§b/mycoin§f -§a Hiển Thị Số Coin Của Bản Thân§e⊰⊹");
-				$sender->sendMessage("§e⊹⊱§b/topcoin <Trang> §f-§a Hiển Thị Bảng Xếp Hạng Coin§e⊰⊹");
-				$sender->sendMessage("§e⊹⊱§b/seecoin <Tên Người Chơi> §f-§a Hiển Thị Số Coin Của Người Chơi§e⊰⊹");
-				$sender->sendMessage("§e⊹⊱§b/setcoin <Tên Người Chơi> <Số Lượng> §f-§a Chỉnh Số Coin Người Chơi§e⊰⊹");
-				$sender->sendMessage("§e⊹⊱§b/givecoin <Tên Người Chơi> <Số Lượng> §f-§a Tăng Số Coin Người Chơi§e⊰⊹");
-				$sender->sendMessage("§e⊹⊱§b/takecoin <Tên Người Chơi> <Số Lượng> §f-§a Giảm Số Coin Người Chơi§e⊰⊹");
-				$sender->sendMessage("§e⊹⊱§b/paycoin <Tên Người Chơi> <Số Lượng> §f-§a Chuyển Số Coin Cho Người Chơi§e⊰⊹");
+				$sender->sendMessage(self::PREFIX . "Commands:");
+				$sender->sendMessage(self::PREFIX . "/mycoin - View your coin balance");
+				$sender->sendMessage(self::PREFIX . "/topcoin <page> - View the coin leaderboard");
+				$sender->sendMessage(self::PREFIX . "/seecoin <player> - View another player's balance");
+				$sender->sendMessage(self::PREFIX . "/setcoin <player> <amount> - Set a player's balance");
+				$sender->sendMessage(self::PREFIX . "/givecoin <player> <amount> - Add coins to a player");
+				$sender->sendMessage(self::PREFIX . "/takecoin <player> <amount> - Remove coins from a player");
+				$sender->sendMessage(self::PREFIX . "/paycoin <player> <amount> - Transfer coins to a player");
 				return true;
 		}
 		return false;
@@ -143,22 +144,22 @@ final class Main extends PluginBase implements Listener{
 	private function handleAdminCommand(CommandSender $sender, string $name, array $args) : bool{
 		$permission = $name . ".cmd";
 		if(!$sender->hasPermission($permission)){
-			$sender->sendMessage("§e⊹⊱§cBạn Không Có Quyền Sử Dụng Câu Lệnh Này§e⊰⊹");
+			$sender->sendMessage(self::PREFIX . "You do not have permission to use this command.");
 			return true;
 		}
 		if(!isset($args[0], $args[1])){
-			$sender->sendMessage("§e⊹⊱§aSử Dụng §b/" . $name . " <Tên Người Chơi> <Số Lượng>§e⊰⊹");
+			$sender->sendMessage(self::PREFIX . "Usage: /" . $name . " <player> <amount>");
 			return true;
 		}
 
 		$player = $this->getServer()->getPlayerExact($args[0]);
 		if($player === null){
-			$sender->sendMessage("§e⊹⊱§cKhông Tìm Thấy Người Chơi§e⊰⊹");
+			$sender->sendMessage(self::PREFIX . "Player not found.");
 			return true;
 		}
 		$amount = $this->parseAmount($args[1], $name === "setcoin");
 		if($amount === null){
-			$sender->sendMessage("§e⊹⊱§cSố Lượng Coin Không Hợp Lệ§e⊰⊹");
+			$sender->sendMessage(self::PREFIX . "Invalid coin amount.");
 			return true;
 		}
 
@@ -170,13 +171,13 @@ final class Main extends PluginBase implements Listener{
 			default => false
 		};
 		if(!$updated){
-			$sender->sendMessage("§e⊹⊱§cKhông Thể Cập Nhật Số Coin.§e⊰⊹");
+			$sender->sendMessage(self::PREFIX . "Could not update the coin balance.");
 			return true;
 		}
 
 		$this->saveLedger();
-		$sender->sendMessage("§e⊹⊱§aSố Coin Của Người Chơi§b " . $targetName . " §aĐã Được Cập Nhật Thành §b" . $this->ledger->getBalance($targetName) . "§a Coin§e⊰⊹");
-		$player->sendMessage("§e⊹⊱§aSố Coin Của Bạn Đã Được Quản Trị Viên " . $sender->getName() . " §aCập Nhật Thành §b" . $this->ledger->getBalance($targetName) . "§a Coin§e⊰⊹");
+		$sender->sendMessage(self::PREFIX . $targetName . "'s balance is now " . $this->ledger->getBalance($targetName) . " coins.");
+		$player->sendMessage(self::PREFIX . "Your balance was set to " . $this->ledger->getBalance($targetName) . " coins by " . $sender->getName() . ".");
 		return true;
 	}
 
